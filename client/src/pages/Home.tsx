@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronRight, Download, Code2, Zap, BookOpen, Cpu, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,31 +12,18 @@ import { cn, splitCourseContentIntoPoints } from "@/lib/utils";
 import { modulesEnhanced, ModuleEnhanced } from "@/data/modulesEnhanced";
 
 const FAB_SCROLL_THRESHOLD_PX = 140;
-const FAB_SCROLL_DELTA_MIN_PX = 4;
 
 export default function Home() {
   const [selectedModule, setSelectedModule] = useState<ModuleEnhanced | null>(null);
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null);
   const [fabRevealed, setFabRevealed] = useState(false);
   const [modulePickerOpen, setModulePickerOpen] = useState(false);
-  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
-    lastScrollYRef.current = window.scrollY || document.documentElement.scrollTop;
     let ticking = false;
     const updateFab = () => {
       const y = window.scrollY || document.documentElement.scrollTop;
-      const last = lastScrollYRef.current;
-      const delta = y - last;
-
-      if (y <= FAB_SCROLL_THRESHOLD_PX) {
-        setFabRevealed(false);
-      } else if (Math.abs(delta) >= FAB_SCROLL_DELTA_MIN_PX) {
-        if (delta < 0) setFabRevealed(true);
-        else setFabRevealed(false);
-      }
-
-      lastScrollYRef.current = y;
+      setFabRevealed(y > FAB_SCROLL_THRESHOLD_PX);
     };
     const onScroll = () => {
       if (!ticking) {
