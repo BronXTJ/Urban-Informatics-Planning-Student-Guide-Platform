@@ -25,6 +25,16 @@
   }
 }
 
+@keyframes importantNoteBorderPulse {
+  0%,
+  100% {
+    border-color: rgb(239 68 68 / 0.35);
+  }
+  50% {
+    border-color: rgb(252 165 165 / 0.85);
+  }
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -64,6 +74,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --animate-guide-download-cta: guideDownloadCtaPulse 2.2s ease-in-out infinite;
   --animate-fab-module-icon-hint: fabModuleIconHint 2.8s ease-in-out infinite;
+  --animate-important-note-border: importantNoteBorderPulse 3.5s ease-in-out infinite;
 }
 
 :root {

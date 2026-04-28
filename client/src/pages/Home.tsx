@@ -170,6 +170,23 @@ export default function Home() {
               </div>
             </div>
 
+            <aside className="mb-10 w-full min-w-0" aria-label="Important note">
+              <div className="motion-safe:animate-important-note-border motion-reduce:animate-none rounded-xl border-2 border-red-500/50 bg-gradient-to-br from-red-500/10 to-slate-900/20 p-4 shadow-sm shadow-red-950/25 sm:p-8">
+                <div className="flex items-start gap-3">
+                  <span
+                    className="mt-2 h-2 w-2 shrink-0 rounded-full bg-red-400 animate-pulse motion-reduce:animate-none"
+                    aria-hidden
+                  />
+                  <p className="text-sm leading-relaxed text-red-100/95 sm:text-base sm:leading-relaxed">
+                    <span className="font-bold text-red-200">Important Note:</span> The module concepts and
+                    topics presented here are based on the official student handbook. However, the tools,
+                    software, and methodologies may vary depending on individual lecturers&apos; choices,
+                    periodic course updates, and the dynamic nature of the learning environment.
+                  </p>
+                </div>
+              </div>
+            </aside>
+
             {/* Modules Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {modulesEnhanced.map((module) => (
