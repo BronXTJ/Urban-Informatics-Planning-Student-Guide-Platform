@@ -11,7 +11,9 @@ import {
 import { cn, splitCourseContentIntoPoints } from "@/lib/utils";
 import { modulesEnhanced, ModuleEnhanced } from "@/data/modulesEnhanced";
 
-const FAB_SCROLL_THRESHOLD_PX = 140;
+/** Hide FAB in the first ~100px; show below that unless near page bottom (footer). */
+const FAB_SCROLL_TOP_PX = 100;
+const FAB_NEAR_BOTTOM_OFFSET_PX = 50;
 
 export default function Home() {
   const [selectedModule, setSelectedModule] = useState<ModuleEnhanced | null>(null);
@@ -23,9 +25,13 @@ export default function Home() {
     let ticking = false;
     const updateFab = () => {
       const y = window.scrollY || document.documentElement.scrollTop;
-      setFabRevealed(y > FAB_SCROLL_THRESHOLD_PX);
+      const docHeight = document.body.offsetHeight;
+      const nearBottom =
+        window.innerHeight + y >= docHeight - FAB_NEAR_BOTTOM_OFFSET_PX;
+      const pastTopThreshold = y > FAB_SCROLL_TOP_PX;
+      setFabRevealed(pastTopThreshold && !nearBottom);
     };
-    const onScroll = () => {
+    const onScrollOrResize = () => {
       if (!ticking) {
         ticking = true;
         requestAnimationFrame(() => {
@@ -35,8 +41,12 @@ export default function Home() {
       }
     };
     updateFab();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
   }, []);
 
   const pickModuleFromFab = (module: ModuleEnhanced) => {
@@ -58,7 +68,7 @@ export default function Home() {
     : [];
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 pb-24">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-blue-500/20">
         <div className="container mx-auto flex flex-nowrap items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:py-4">
@@ -449,11 +459,17 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-blue-500/20 bg-slate-950/50 mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-slate-400 text-sm">
+      {/* Footer — modest pb for content/safe-area; FAB hides near bottom to avoid overlap */}
+      <footer className="relative mt-16 bg-gradient-to-b from-[#0c1525] via-[#060d18] to-[#02040a] pb-10 pt-8 text-center">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"
+          aria-hidden
+        />
+        <div className="container mx-auto px-4 text-sm text-slate-300">
           <p>Urban Informatics & Planning | 3rd Semester Learning Guide</p>
-          <p className="mt-2 text-xs text-slate-500">Based on Official Student Handbook (2024-2028) | Department of Town & Country Planning, University of Moratuwa</p>
+          <p className="mt-2 text-xs text-slate-400">
+            Based on Official Student Handbook (2024-2028) | Department of Town & Country Planning, University of Moratuwa
+          </p>
           <p className="mt-2 text-xs">
             <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text font-medium text-transparent">
               Created by Thanuja Lakshan Senarathne |{" "}
@@ -468,6 +484,10 @@ export default function Home() {
             </a>
           </p>
         </div>
+        <div
+          className="pointer-events-none mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent sm:w-28"
+          aria-hidden
+        />
       </footer>
 
       <Sheet open={modulePickerOpen} onOpenChange={setModulePickerOpen}>
@@ -514,7 +534,7 @@ export default function Home() {
         aria-hidden={!fabRevealed}
         tabIndex={fabRevealed ? 0 : -1}
         className={cn(
-          "fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/40 transition-all duration-300 ease-out hover:from-blue-700 hover:to-cyan-700 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none motion-reduce:transition-none sm:right-6",
+          "fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/40 transition-[opacity,transform] duration-300 ease-out hover:from-blue-700 hover:to-cyan-700 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none motion-reduce:transition-none sm:right-6",
           fabRevealed
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0",
