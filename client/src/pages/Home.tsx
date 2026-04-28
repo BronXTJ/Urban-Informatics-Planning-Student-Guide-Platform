@@ -81,7 +81,7 @@ export default function Home() {
             </div>
           </button>
 
-          <div className="flex min-w-0 flex-1 justify-end md:hidden">
+          <div className="flex min-w-0 flex-1 items-center justify-end md:hidden">
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
@@ -89,14 +89,17 @@ export default function Home() {
               aria-label="Download full PDF guide"
               className="inline-flex shrink-0 rounded-md motion-safe:animate-guide-download-cta motion-reduce:animate-none"
             >
-              <Button className="h-9 w-9 shrink-0 border-0 bg-gradient-to-r from-blue-600 to-cyan-600 p-0 text-white hover:from-blue-700 hover:to-cyan-700">
+              <Button className="h-9 min-h-9 shrink-0 gap-2 whitespace-nowrap border-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-2 text-sm text-white hover:from-blue-700 hover:to-cyan-700">
                 <Download className="h-4 w-4 shrink-0" aria-hidden />
-                <span className="sr-only">Download PDF guide</span>
+                <span>Get Full Guide</span>
               </Button>
             </a>
           </div>
 
-          <div className="hidden shrink-0 md:flex md:items-center">
+          <div className="hidden min-w-0 flex-1 items-center justify-between gap-3 md:flex">
+            <p className="min-w-0 flex-1 text-right text-sm leading-snug whitespace-normal text-slate-400">
+              All modules & concepts in PDF format
+            </p>
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
