@@ -31,15 +31,22 @@ jobs:
           node-version: "22"
           cache: pnpm
 
+      # ✅ FIXED
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: |
+          cd client
+          pnpm install --no-frozen-lockfile
 
+      # ✅ FIXED
       - name: Build static site
-        run: pnpm run build
+        run: |
+          cd client
+          pnpm run build
 
+      # ✅ FIXED
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: client/dist
 
   deploy:
     needs: build
