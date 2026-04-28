@@ -2,9 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -19,31 +17,31 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1) Get your code
       - uses: actions/checkout@v4
 
+      # 2) Setup pnpm (NO version → avoids conflict)
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
+      # 3) Setup Node
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: 22
           cache: pnpm
 
-      # ✅ FIXED
+      # 4) Install deps INSIDE client
       - name: Install
-        run: |
-          cd client
-          pnpm install --no-frozen-lockfile
+        working-directory: client
+        run: pnpm install --no-frozen-lockfile
 
-      # ✅ FIXED
-      - name: Build static site
-        run: |
-          cd client
-          pnpm run build
+      # 5) Build INSIDE client
+      - name: Build
+        working-directory: client
+        run: pnpm run build
 
-      # ✅ FIXED
+      # 6) Upload built site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: client/dist
@@ -51,9 +49,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
+
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
