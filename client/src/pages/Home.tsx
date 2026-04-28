@@ -72,29 +72,47 @@ export default function Home() {
               <BookOpen className="h-5 w-5 text-white sm:h-6 sm:w-6" aria-hidden />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="block truncate text-base font-bold leading-tight text-white sm:text-2xl">
+              <span className="block min-w-0 whitespace-normal text-base font-bold leading-tight text-white sm:text-2xl md:truncate">
                 Urban Informatics & Planning
               </span>
-              <span className="block truncate text-xs text-blue-300 sm:text-sm">
+              <span className="block min-w-0 whitespace-normal text-xs text-blue-300 sm:text-sm md:truncate">
                 3rd Semester Learning Guide
               </span>
             </div>
           </button>
-          <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
-            <p className="min-w-0 max-w-[min(100%,14rem)] flex-1 text-right text-xs leading-snug whitespace-normal text-slate-400 sm:max-w-none sm:text-sm">
+
+          <div className="flex min-w-0 flex-1 items-center justify-between gap-2 md:hidden">
+            <p className="min-w-0 flex-1 text-right text-base font-medium leading-tight text-blue-300">
+              PDF Guide
+            </p>
+            <a
+              href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
+              download
+              title="Download full learning guide"
+              aria-label="Download full PDF guide"
+              className="inline-flex shrink-0 rounded-md motion-safe:animate-guide-download-cta motion-reduce:animate-none"
+            >
+              <Button className="h-9 w-9 shrink-0 border-0 bg-gradient-to-r from-blue-600 to-cyan-600 p-0 text-white hover:from-blue-700 hover:to-cyan-700">
+                <Download className="h-4 w-4 shrink-0" aria-hidden />
+                <span className="sr-only">Download PDF guide</span>
+              </Button>
+            </a>
+          </div>
+
+          <div className="hidden min-w-0 flex-1 items-center justify-between gap-3 md:flex">
+            <p className="min-w-0 flex-1 text-right text-sm leading-snug whitespace-normal text-slate-400">
               All modules & concepts in PDF format
             </p>
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
               title="Download full learning guide"
-              aria-label="Download full learning guide"
+              aria-label="Download full PDF guide"
               className="inline-flex shrink-0 rounded-md motion-safe:animate-guide-download-cta motion-reduce:animate-none"
             >
               <Button className="h-10 min-h-10 shrink-0 gap-2 whitespace-nowrap border-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-2.5 py-2 text-sm text-white hover:from-blue-700 hover:to-cyan-700 sm:px-4 sm:text-base">
                 <Download className="h-4 w-4 shrink-0" aria-hidden />
-                <span className="sm:hidden">Guide</span>
-                <span className="hidden sm:inline">Download Full Guide</span>
+                <span>Download Full Guide</span>
               </Button>
             </a>
           </div>
