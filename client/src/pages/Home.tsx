@@ -81,10 +81,7 @@ export default function Home() {
             </div>
           </button>
 
-          <div className="flex min-w-0 flex-1 items-center justify-between gap-2 md:hidden">
-            <p className="min-w-0 flex-1 text-right text-base font-medium leading-tight text-blue-300">
-              PDF Guide
-            </p>
+          <div className="flex min-w-0 flex-1 justify-end md:hidden">
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
@@ -99,10 +96,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="hidden min-w-0 flex-1 items-center justify-between gap-3 md:flex">
-            <p className="min-w-0 flex-1 text-right text-sm leading-snug whitespace-normal text-slate-400">
-              All modules & concepts in PDF format
-            </p>
+          <div className="hidden shrink-0 md:flex md:items-center">
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
@@ -202,7 +196,7 @@ export default function Home() {
         ) : (
           <>
             {/* Module Detail View */}
-            <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="mb-8">
               <Button
                 type="button"
                 title="Back to module list"
@@ -211,16 +205,12 @@ export default function Home() {
                   setExpandedConcept(null);
                 }}
                 variant="outline"
-                className="w-fit min-h-10 gap-2 self-start border-blue-500/30 text-blue-300 hover:bg-blue-500/10"
+                className="w-fit min-h-10 gap-2 border-blue-500/30 text-blue-300 hover:bg-blue-500/10"
               >
                 <ChevronRight className="h-4 w-4 shrink-0 rotate-180" aria-hidden />
                 <span>Back</span>
                 <span className="hidden sm:inline"> to Modules</span>
               </Button>
-              <div className="hidden text-right sm:block">
-                <p className="text-sm font-medium text-blue-200">Complete Learning Guide</p>
-                <p className="text-xs text-slate-400">All modules & concepts in PDF format</p>
-              </div>
             </div>
 
             {/* Module Header */}
@@ -334,20 +324,23 @@ export default function Home() {
                   return (
                   <div
                     key={idx}
-                    className="bg-slate-800/50 border border-blue-500/20 rounded-xl overflow-hidden transition-all duration-300"
+                    className="group bg-slate-800/50 border border-blue-500/20 rounded-xl overflow-hidden transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-blue-400/45 hover:shadow-[0_10px_15px_-3px_rgb(30_64_175_/_0.18),0_0_28px_-10px_rgb(34_211_238_/_0.14)] motion-reduce:hover:translate-y-0"
                   >
                     <button
+                      type="button"
                       onClick={() => setExpandedConcept(expandedConcept === concept.title ? null : concept.title)}
-                      className="w-full p-6 flex items-start justify-between hover:bg-slate-700/50 transition-colors"
+                      className="flex w-full items-start justify-between p-6 transition-colors duration-300 hover:bg-slate-700/50"
                     >
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-bold text-white mb-2">{concept.title}</h4>
-                        <p className="text-slate-400 text-sm line-clamp-2">{concept.fullDescription}</p>
+                      <div className="min-w-0 flex-1 text-left">
+                        <h4 className="mb-2 text-lg font-bold text-white">{concept.title}</h4>
+                        <p className="line-clamp-2 text-sm text-slate-400">{concept.fullDescription}</p>
                       </div>
                       <ChevronRight
-                        className={`w-5 h-5 text-blue-400 flex-shrink-0 ml-4 transition-transform ${
-                          expandedConcept === concept.title ? "rotate-90" : ""
-                        }`}
+                        className={cn(
+                          "ml-4 h-5 w-5 shrink-0 text-blue-400 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-cyan-300 motion-reduce:group-hover:translate-x-0",
+                          expandedConcept === concept.title && "rotate-90",
+                        )}
+                        aria-hidden
                       />
                     </button>
 
@@ -458,6 +451,19 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center text-slate-400 text-sm">
           <p>Urban Informatics & Planning | 3rd Semester Learning Guide</p>
           <p className="mt-2 text-xs text-slate-500">Based on Official Student Handbook (2024-2028) | Department of Town & Country Planning, University of Moratuwa</p>
+          <p className="mt-2 text-xs">
+            <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text font-medium text-transparent">
+              Created by Thanuja Lakshan Senarathne |{" "}
+            </span>
+            <a
+              href="https://github.com/BronXTJ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text font-mono text-transparent underline-offset-2 transition-opacity hover:opacity-90 hover:underline"
+            >
+              {"</BronXTJ>"}
+            </a>
+          </p>
         </div>
       </footer>
 
