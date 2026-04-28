@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
+import { cn, splitCourseContentIntoPoints } from "@/lib/utils";
 import { modulesEnhanced, ModuleEnhanced } from "@/data/modulesEnhanced";
 
 const FAB_SCROLL_THRESHOLD_PX = 140;
@@ -46,33 +46,50 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const goToHome = () => {
+    setSelectedModule(null);
+    setExpandedConcept(null);
+    setModulePickerOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const courseContentPoints = selectedModule
+    ? splitCourseContentIntoPoints(selectedModule.courseContent)
+    : [];
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-blue-500/20">
-        <div className="container mx-auto flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-4">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
-            <div className="shrink-0 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 p-2">
-              <BookOpen className="h-6 w-6 text-white" />
+        <div className="container mx-auto flex flex-nowrap items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:py-4">
+          <button
+            type="button"
+            onClick={goToHome}
+            aria-label="Return to module list (home)"
+            className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-lg border-0 bg-transparent p-0 text-left shadow-none outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:gap-3"
+          >
+            <div className="shrink-0 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 p-1.5 sm:p-2">
+              <BookOpen className="h-5 w-5 text-white sm:h-6 sm:w-6" aria-hidden />
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="text-lg font-bold leading-tight text-white sm:text-2xl">
+              <span className="block truncate text-base font-bold leading-tight text-white sm:text-2xl">
                 Urban Informatics & Planning
-              </h1>
-              <p className="text-xs text-blue-300 sm:text-sm">3rd Semester Learning Guide</p>
+              </span>
+              <span className="block truncate text-xs text-blue-300 sm:text-sm">
+                3rd Semester Learning Guide
+              </span>
             </div>
-          </div>
-          <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end sm:gap-4">
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-medium text-blue-200">Complete Learning Guide</p>
-              <p className="text-xs text-slate-400">All modules & concepts in PDF format</p>
-            </div>
+          </button>
+          <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+            <p className="min-w-0 max-w-[min(100%,14rem)] flex-1 text-right text-xs leading-snug whitespace-normal text-slate-400 sm:max-w-none sm:text-sm">
+              All modules & concepts in PDF format
+            </p>
             <a
               href={`${import.meta.env.BASE_URL}Urban_Informatics_3rd_Semester_Guide.pdf`}
               download
               title="Download full learning guide"
               aria-label="Download full learning guide"
-              className="shrink-0"
+              className="inline-flex shrink-0 rounded-md motion-safe:animate-guide-download-cta motion-reduce:animate-none"
             >
               <Button className="h-10 min-h-10 shrink-0 gap-2 whitespace-nowrap border-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-2.5 py-2 text-sm text-white hover:from-blue-700 hover:to-cyan-700 sm:px-4 sm:text-base">
                 <Download className="h-4 w-4 shrink-0" aria-hidden />
@@ -92,9 +109,25 @@ export default function Home() {
             <div className="mb-16">
               <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 p-4 backdrop-blur-sm sm:p-8">
                 <h2 className="mb-4 text-2xl font-bold text-white sm:text-4xl">3rd Semester Modules</h2>
-                <p className="mb-6 text-base text-blue-100 sm:text-lg">
-                  A comprehensive learning guide covering all the key concepts, methodologies, and tools you'll master in your third semester. Click on any module to explore its detailed content.
-                </p>
+                <ul className="mb-6 space-y-3">
+                  <li className="flex items-start gap-3 text-base leading-relaxed text-blue-100 sm:text-lg">
+                    <span
+                      className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400 sm:mt-3"
+                      aria-hidden
+                    />
+                    <span>
+                      A comprehensive learning guide covering all the key concepts, methodologies, and tools
+                      you'll master in your third semester.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3 text-base leading-relaxed text-blue-100 sm:text-lg">
+                    <span
+                      className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400 sm:mt-3"
+                      aria-hidden
+                    />
+                    <span>Click on any module to explore its detailed content.</span>
+                  </li>
+                </ul>
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-2 text-blue-300">
                     <Cpu className="w-4 h-4" />
@@ -222,9 +255,20 @@ export default function Home() {
             </div>
 
             {/* Course Content */}
-            <div className="bg-slate-800/50 border border-blue-500/20 rounded-xl p-6 mb-8">
-              <h3 className="text-lg font-bold text-white mb-4">Course Content</h3>
-              <p className="text-slate-300 leading-relaxed">{selectedModule.courseContent}</p>
+            <div className="mb-8 rounded-xl border border-blue-500/20 bg-slate-800/50 p-6">
+              <h3 className="mb-4 text-lg font-bold text-white">Course Content</h3>
+              {courseContentPoints.length === 0 ? (
+                <p className="text-sm leading-relaxed text-slate-300">{selectedModule.courseContent}</p>
+              ) : (
+                <ul className="space-y-2">
+                  {courseContentPoints.map((point, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm leading-relaxed text-slate-300">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" aria-hidden />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Teaching Methods & Assessment */}
@@ -267,7 +311,9 @@ export default function Home() {
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-white mb-6">Key Concepts & Topics</h3>
               <div className="space-y-4">
-                {selectedModule.concepts.map((concept, idx) => (
+                {selectedModule.concepts.map((concept, idx) => {
+                  const descPoints = splitCourseContentIntoPoints(concept.fullDescription);
+                  return (
                   <div
                     key={idx}
                     className="bg-slate-800/50 border border-blue-500/20 rounded-xl overflow-hidden transition-all duration-300"
@@ -288,10 +334,29 @@ export default function Home() {
                     </button>
 
                     {expandedConcept === concept.title && (
-                      <div className="px-6 pb-6 border-t border-blue-500/10">
+                      <div className="border-t border-blue-500/10 px-6 pb-6">
                         <div className="mb-6">
-                          <h5 className="text-sm font-semibold text-cyan-400 mb-3 uppercase tracking-wide">Full Description</h5>
-                          <p className="text-slate-300 leading-relaxed">{concept.fullDescription}</p>
+                          <h5 className="mb-3 text-sm font-semibold uppercase tracking-wide text-cyan-400">
+                            Full Description
+                          </h5>
+                          {descPoints.length === 0 ? (
+                            <p className="leading-relaxed text-slate-300">{concept.fullDescription}</p>
+                          ) : (
+                            <ul className="space-y-2">
+                              {descPoints.map((point, pidx) => (
+                                <li
+                                  key={`${concept.title}-desc-${pidx}`}
+                                  className="flex items-start gap-2 text-sm leading-relaxed text-slate-300"
+                                >
+                                  <span
+                                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400"
+                                    aria-hidden
+                                  />
+                                  <span>{point}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
 
                         <div className="mb-6">
@@ -323,7 +388,8 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -422,7 +488,10 @@ export default function Home() {
           className="fixed right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/40 transition hover:from-blue-700 hover:to-cyan-700 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
           style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))" }}
         >
-          <LayoutGrid className="h-6 w-6" aria-hidden />
+          <LayoutGrid
+            className="h-6 w-6 origin-center motion-safe:animate-fab-module-icon-hint motion-reduce:animate-none"
+            aria-hidden
+          />
         </button>
       )}
     </div>
