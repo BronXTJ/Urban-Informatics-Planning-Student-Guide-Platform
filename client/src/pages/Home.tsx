@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronRight, Download, Code2, Zap, BookOpen, Cpu, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,18 +12,31 @@ import { cn, splitCourseContentIntoPoints } from "@/lib/utils";
 import { modulesEnhanced, ModuleEnhanced } from "@/data/modulesEnhanced";
 
 const FAB_SCROLL_THRESHOLD_PX = 140;
+const FAB_SCROLL_DELTA_MIN_PX = 4;
 
 export default function Home() {
   const [selectedModule, setSelectedModule] = useState<ModuleEnhanced | null>(null);
   const [expandedConcept, setExpandedConcept] = useState<string | null>(null);
-  const [showFab, setShowFab] = useState(false);
+  const [fabRevealed, setFabRevealed] = useState(false);
   const [modulePickerOpen, setModulePickerOpen] = useState(false);
+  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
+    lastScrollYRef.current = window.scrollY || document.documentElement.scrollTop;
     let ticking = false;
     const updateFab = () => {
       const y = window.scrollY || document.documentElement.scrollTop;
-      setShowFab(y > FAB_SCROLL_THRESHOLD_PX);
+      const last = lastScrollYRef.current;
+      const delta = y - last;
+
+      if (y <= FAB_SCROLL_THRESHOLD_PX) {
+        setFabRevealed(false);
+      } else if (Math.abs(delta) >= FAB_SCROLL_DELTA_MIN_PX) {
+        if (delta < 0) setFabRevealed(true);
+        else setFabRevealed(false);
+      }
+
+      lastScrollYRef.current = y;
     };
     const onScroll = () => {
       if (!ticking) {
@@ -58,7 +71,7 @@ export default function Home() {
     : [];
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 pb-24">
       {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-blue-500/20">
         <div className="container mx-auto flex flex-nowrap items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:py-4">
@@ -505,22 +518,27 @@ export default function Home() {
         </SheetContent>
       </Sheet>
 
-      {showFab && (
-        <button
-          type="button"
-          onClick={() => setModulePickerOpen(true)}
-          aria-label="Open module list"
-          aria-expanded={modulePickerOpen}
-          aria-haspopup="dialog"
-          className="fixed right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/40 transition hover:from-blue-700 hover:to-cyan-700 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none"
-          style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))" }}
-        >
-          <LayoutGrid
-            className="h-6 w-6 origin-center motion-safe:animate-fab-module-icon-hint motion-reduce:animate-none"
-            aria-hidden
-          />
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={() => setModulePickerOpen(true)}
+        aria-label="Open module list"
+        aria-expanded={modulePickerOpen}
+        aria-haspopup="dialog"
+        aria-hidden={!fabRevealed}
+        tabIndex={fabRevealed ? 0 : -1}
+        className={cn(
+          "fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/40 transition-all duration-300 ease-out hover:from-blue-700 hover:to-cyan-700 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus-visible:outline-none motion-reduce:transition-none sm:right-6",
+          fabRevealed
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-4 opacity-0",
+        )}
+        style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))" }}
+      >
+        <LayoutGrid
+          className="h-6 w-6 origin-center motion-safe:animate-fab-module-icon-hint motion-reduce:animate-none"
+          aria-hidden
+        />
+      </button>
     </div>
   );
 }
