@@ -35,6 +35,18 @@
   }
 }
 
+@keyframes footerBronxtjNeonGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgb(34 211 238 / 0.75))
+      drop-shadow(0 0 10px rgb(59 130 246 / 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgb(34 211 238 / 0.95))
+      drop-shadow(0 0 18px rgb(59 130 246 / 0.55));
+  }
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -75,6 +87,7 @@
   --animate-guide-download-cta: guideDownloadCtaPulse 2.2s ease-in-out infinite;
   --animate-fab-module-icon-hint: fabModuleIconHint 2.8s ease-in-out infinite;
   --animate-important-note-border: importantNoteBorderPulse 3.5s ease-in-out infinite;
+  --animate-footer-bronxtj-neon: footerBronxtjNeonGlow 2.5s ease-in-out infinite;
 }
 
 :root {

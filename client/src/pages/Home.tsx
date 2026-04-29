@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, Download, Code2, Zap, BookOpen, Cpu, LayoutGrid } from "lucide-react";
+import {
+  ChevronRight,
+  Download,
+  Code2,
+  Zap,
+  BookOpen,
+  Cpu,
+  LayoutGrid,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -495,9 +504,12 @@ export default function Home() {
               href="https://github.com/BronXTJ"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text font-mono text-transparent underline-offset-2 transition-opacity hover:opacity-90 hover:underline"
+              className="inline-flex cursor-pointer items-center gap-1 underline-offset-2 transition-opacity hover:opacity-90 hover:underline"
             >
-              {"</BronXTJ>"}
+              <ExternalLink className="size-3 shrink-0 text-cyan-400" aria-hidden />
+              <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text font-mono text-transparent motion-safe:animate-footer-bronxtj-neon motion-reduce:animate-none motion-reduce:[filter:drop-shadow(0_0_6px_rgb(34_211_238_/_0.85))_drop-shadow(0_0_14px_rgb(59_130_246_/_0.45))]">
+                {"</BronXTJ>"}
+              </span>
             </a>
           </p>
         </div>
